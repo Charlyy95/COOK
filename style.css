@@ -1,0 +1,294 @@
+/* ===== COULEURS ET RÉGLAGES : tout se change ici ===== */
+:root {
+  --couleur-fond: #F2E8CF;         /* beige très très clair : fond de la page */
+  --couleur-carte: #ffffff;        /* fond des zones de saisie */
+  --couleur-bleu-clair: #0277ca;   /* barre d'onglets */
+  --couleur-bleu-moyen: #096db9;   /* bandeau de recherche */
+  --couleur-bleu: #02467e;         /* boutons, titre, onglet actif */
+  --couleur-accent: #d9946f;       /* touche chaude : petits traits */
+  --couleur-texte: #1f2f3d;
+  --couleur-texte-doux: #55646f;
+  --couleur-placeholder: #e8f0f5;  /* fond des cartes sans photo */
+  --couleur-bordure: #e3dac9;
+
+  --couleur-erreur-fond: #fbe3e0;
+  --couleur-erreur-texte: #8a2a1f;
+  --couleur-succes-fond: #e0f0e4;
+  --couleur-succes-texte: #24633a;
+
+  --rayon: 6px;
+  --largeur-max: 1200px;
+  --hauteur-bandeau: 90px;
+  --hauteur-champ: 46px;
+}
+
+/* ===== BASE ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--couleur-fond);
+  color: var(--couleur-texte);
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  color: var(--couleur-bleu);
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin: 30px 0;
+}
+
+/* ===== BARRE D'ONGLETS ===== */
+nav {
+  order: -1; /* place la barre au-dessus du titre */
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  background: var(--couleur-bleu-clair);
+}
+
+nav .btn-onglet {
+  background: none;
+  color: var(--couleur-texte);
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  margin: 0;
+  padding: 26px 8px 20px;
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+nav .btn-onglet.actif {
+  color: var(--couleur-bleu);
+  border-bottom-color: var(--couleur-accent);
+}
+
+/* ===== MESSAGES (erreurs et confirmations) ===== */
+#message {
+  display: none;
+  width: min(700px, 90%);
+  margin: 16px auto 0;
+  padding: 12px 16px;
+  border-radius: var(--rayon);
+  font-weight: bold;
+}
+
+#message.erreur {
+  display: block;
+  background: var(--couleur-erreur-fond);
+  color: var(--couleur-erreur-texte);
+}
+
+#message.ok {
+  display: block;
+  background: var(--couleur-succes-fond);
+  color: var(--couleur-succes-texte);
+}
+
+/* ===== ONGLETS ===== */
+.onglet {
+  display: none;
+}
+
+.onglet.actif {
+  display: block;
+}
+
+/* ===== ONGLET RECETTES ===== */
+/* bandeau bleu derrière la barre de recherche */
+#onglet-recettes {
+  background: linear-gradient(
+    var(--couleur-bleu-moyen) var(--hauteur-bandeau),
+    transparent var(--hauteur-bandeau)
+  );
+}
+
+#recherche-recette {
+  display: block;
+  width: min(580px, 90%);
+  height: var(--hauteur-champ);
+  margin: calc((var(--hauteur-bandeau) - var(--hauteur-champ)) / 2) auto;
+  padding: 0 16px;
+  background: var(--couleur-carte);
+  border: none;
+  border-radius: var(--rayon);
+  font-size: 1rem;
+}
+
+#recherche-recette::placeholder {
+  font-style: italic;
+}
+
+/* grille de cartes */
+#liste-recettes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 30px;
+  max-width: var(--largeur-max);
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* bloc coloré à la place de la photo, quand il n'y en a pas */
+.recette::before {
+  content: "🍽️";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 180px;
+  font-size: 3rem;
+  background: var(--couleur-placeholder);
+  border-radius: var(--rayon);
+}
+
+.recette.avec-photo::before {
+  display: none;
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: var(--rayon);
+}
+
+.recette h4 {
+  margin: 20px 0 10px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* petit trait chaud au-dessus du titre */
+.recette h4::before {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  margin-bottom: 14px;
+  background: var(--couleur-accent);
+}
+
+.recette ul,
+.recette ol {
+  margin: 0 0 10px;
+  padding-left: 20px;
+  font-size: 0.9rem;
+  color: var(--couleur-texte-doux);
+}
+
+/* ===== ONGLET CRÉER ===== */
+#onglet-creer form {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+input[type="text"] {
+  padding: 10px;
+  background: var(--couleur-carte);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon);
+  color: var(--couleur-texte);
+  font-size: 1rem;
+}
+
+input[type="text"]:focus {
+  outline: 2px solid var(--couleur-bleu-moyen);
+  border-color: var(--couleur-bleu);
+}
+
+#titre {
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.etape {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+#recherche {
+  width: 55%;
+}
+
+#choix-ingredients {
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 12px 0;
+  padding: 10px;
+  background: var(--couleur-carte);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon);
+}
+
+#choix-ingredients label {
+  display: block;
+  padding: 4px 0;
+}
+
+/* petite vignette de l'ingrédient */
+.mini {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+/* le champ quantité apparaît quand la case est cochée */
+.quantite {
+  display: none;
+  width: 110px;
+  margin-left: 8px;
+  padding: 4px 8px;
+}
+
+input[type="checkbox"]:checked ~ .quantite {
+  display: inline;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--couleur-bleu);
+}
+
+/* ===== BOUTONS ===== */
+button {
+  margin-top: 6px;
+  padding: 10px 18px;
+  background: var(--couleur-bleu);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--rayon);
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+/* ===== TÉLÉPHONE ===== */
+@media (max-width: 600px) {
+  nav { gap: 20px; }
+  h1 { font-size: 2.2rem; }
+  #recherche { width: 100%; margin-bottom: 8px; }
+}

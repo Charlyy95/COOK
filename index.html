@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CooK</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<h1>CooK</h1>
+
+<nav>
+  <button type="button" class="btn-onglet" data-onglet="onglet-recettes">Recettes</button>
+  <button type="button" class="btn-onglet" data-onglet="onglet-creer">Créer</button>
+</nav>
+
+<div id="message"></div>
+
+<!-- Onglet 1 : chercher les recettes -->
+<section id="onglet-recettes" class="onglet">
+  <input type="text" id="recherche-recette" placeholder="Chercher une recette ou un ingrédient">
+  <div id="liste-recettes"></div>
+</section>
+
+<!-- Onglet 2 : créer une recette -->
+<section id="onglet-creer" class="onglet">
+  <form>
+    <input type="text" id="titre" placeholder="Titre de la recette"><br>
+    <label>Photo de la recette : <input type="file" id="photo-recette" accept="image/*"></label><br><br>
+
+    <div id="liste-etapes"></div>
+    <button type="button" id="btn-ajout-etape">Ajouter une étape</button><br><br>
+
+    <input type="text" id="recherche" placeholder="Chercher un ingrédient">
+    <button type="button" id="btn-ajout-ingredient">Ajouter cet ingrédient</button><br>
+    <label>Photo de l'ingrédient : <input type="file" id="photo-ingredient" accept="image/*"></label>
+    <div id="choix-ingredients"></div>
+
+    <button type="button" id="btn-recette">Enregistrer la recette</button>
+  </form>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+</body>
+</html>
