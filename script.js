@@ -3,6 +3,9 @@ const db = window.supabase.createClient(
   'sb_publishable__QOdAIhvDh94gG5MS-vpcA_OVSPan9R'
 )
 
+// l'email du compte partagé que tu as créé dans Supabase
+const EMAIL_FAMILLE = 'meriot.cook@gmail.com'
+
 // ----- Messages -----
 let minuteur
 function afficherMessage(texte, type) {
@@ -24,6 +27,55 @@ async function existeDeja(table, colonne, valeur) {
     return (ligne[colonne] || '').toLowerCase() === valeur.toLowerCase()
   })
 }
+
+// ----- Connexion -----
+function entrer() {
+  document.body.classList.add('connecte')
+  afficherOnglet('onglet-recettes')
+  chargerIngredients()
+  chargerRecettes()
+}
+
+async function demarrer() {
+  const { data } = await db.auth.getSession()
+  if (data.session) entrer()
+}
+
+document.getElementById('btn-connexion').addEventListener('click', async function () {
+  const champ = document.getElementById('mot-de-passe')
+  if (champ.value === '') {
+    afficherMessage('Tape le mot de passe de la famille.', 'erreur')
+    return
+  }
+  const { error } = await db.auth.signInWithPassword({
+    email: EMAIL_FAMILLE,
+    password: champ.value
+  })
+  if (error) {
+    console.log(error)
+    afficherMessage('Mot de passe incorrect.', 'erreur')
+    return
+  }
+  champ.value = ''
+  entrer()
+})
+
+document.getElementById('mot-de-passe').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') document.getElementById('btn-connexion').click()
+})
+
+document.getElementById('btn-deconnexion').addEventListener('click', async function () {
+  await db.auth.signOut()
+})
+
+// si la session se termine, on revient à l'écran de connexion
+db.auth.onAuthStateChange(function (event) {
+  if (event === 'SIGNED_OUT') {
+    document.body.classList.remove('connecte')
+    document.getElementById('liste-recettes').innerHTML = ''
+    document.getElementById('choix-ingredients').innerHTML = ''
+  }
+})
 
 // ----- Photos -----
 // réduit l'image à 1000 px max et la convertit en JPEG léger
@@ -69,8 +121,6 @@ document.querySelectorAll('.btn-onglet').forEach(function (b) {
   })
 })
 
-afficherOnglet('onglet-recettes')
-
 // ----- Ingrédients -----
 async function chargerIngredients() {
   const { data, error } = await db.from('ingredients').select('*')
@@ -86,8 +136,6 @@ async function chargerIngredients() {
     zone.innerHTML += '<label><input type="checkbox" value="' + ing.id + '"> ' + mini + ing.nom + ' <input type="text" class="quantite" placeholder="quantité"></label>'
   })
 }
-
-chargerIngredients()
 
 document.getElementById('recherche').addEventListener('input', function () {
   const texte = this.value.toLowerCase()
@@ -169,9 +217,11 @@ async function chargerRecettes() {
   data.forEach(function (r) {
     let html = '<div class="recette' + (r.photo ? ' avec-photo' : '') + '">'
     if (r.photo) html += '<img class="photo" src="' + r.photo + '">'
-    html += '<h4>' + r.titre + '</h4><ul>'
+    html += '<h4>' + r.titre + '</h4>'
+    if (r.auteur) html += '<p class="auteur">Ajoutée par ' + r.auteur + '</p>'
+    html += '<ul>'
     r.recette_ingredients.forEach(function (ri) {
-      html += '<li>' + ri.quantite + ' ' + ri.ingredients.nom + '</li>'
+      html += '<li>' + (ri.quantite ? ri.quantite + ' ' : '') + ri.ingredients.nom + '</li>'
     })
     html += '</ul><ol>'
     ;(r.etapes || '').split('\n').filter(function (e) { return e !== '' }).forEach(function (e) {
@@ -182,8 +232,6 @@ async function chargerRecettes() {
   })
 }
 
-chargerRecettes()
-
 // ----- Chercher une recette -----
 document.getElementById('recherche-recette').addEventListener('input', function () {
   const texte = this.value.toLowerCase()
@@ -193,9 +241,13 @@ document.getElementById('recherche-recette').addEventListener('input', function 
 })
 
 // ----- Enregistrer la recette -----
+// le prénom est gardé dans le navigateur pour ne pas le retaper
+document.getElementById('auteur').value = localStorage.getItem('auteur') || ''
+
 document.getElementById('btn-recette').addEventListener('click', async function () {
   const bouton = this
   const titre = document.getElementById('titre').value.trim()
+  const auteur = document.getElementById('auteur').value.trim()
   const champPhoto = document.getElementById('photo-recette')
 
   const listeEtapes = Array.from(document.querySelectorAll('.etape'))
@@ -204,28 +256,19 @@ document.getElementById('btn-recette').addEventListener('click', async function 
 
   const coches = Array.from(document.querySelectorAll('#choix-ingredients input[type="checkbox"]:checked'))
 
-  const sansQuantite = coches.filter(function (cb) {
-    return cb.parentElement.querySelector('.quantite').value.trim() === ''
-  })
-
   // 1. vérifications des champs obligatoires
   if (titre === '') {
     afficherMessage('Le titre est obligatoire.', 'erreur')
     document.getElementById('titre').focus()
     return
   }
-  if (listeEtapes.length === 0) {
-    afficherMessage('Ajoute au moins une étape.', 'erreur')
-    document.querySelector('.etape').focus()
+  if (auteur === '') {
+    afficherMessage('Indique ton prénom.', 'erreur')
+    document.getElementById('auteur').focus()
     return
   }
   if (coches.length === 0) {
     afficherMessage('Coche au moins un ingrédient.', 'erreur')
-    return
-  }
-  if (sansQuantite.length > 0) {
-    const noms = sansQuantite.map(function (cb) { return cb.parentElement.textContent.trim() })
-    afficherMessage('Indique la quantité de : ' + noms.join(', ') + ' (ou écris "au goût").', 'erreur')
     return
   }
 
@@ -251,7 +294,7 @@ document.getElementById('btn-recette').addEventListener('click', async function 
     // 4. la recette
     const { data, error } = await db
       .from('recettes')
-      .insert({ titre: titre, etapes: listeEtapes.join('\n'), photo: photo })
+      .insert({ titre: titre, auteur: auteur, etapes: listeEtapes.join('\n'), photo: photo })
       .select()
     if (error) {
       console.log(error)
@@ -276,6 +319,7 @@ document.getElementById('btn-recette').addEventListener('click', async function 
     }
 
     // 6. remise à zéro, puis retour sur l'onglet des recettes
+    localStorage.setItem('auteur', auteur)
     document.getElementById('titre').value = ''
     champPhoto.value = ''
     document.getElementById('liste-etapes').innerHTML = ''
@@ -288,3 +332,6 @@ document.getElementById('btn-recette').addEventListener('click', async function 
     bouton.disabled = false
   }
 })
+
+// ----- Démarrage -----
+demarrer()

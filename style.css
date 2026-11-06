@@ -46,10 +46,35 @@ h1 {
   margin: 30px 0;
 }
 
+/* ===== CONNEXION ===== */
+/* tant que le body n'a pas la classe "connecte", on cache le site */
+body:not(.connecte) nav,
+body:not(.connecte) .onglet {
+  display: none;
+}
+
+#ecran-connexion {
+  display: none;
+  width: min(400px, 90%);
+  margin: 30px auto;
+  text-align: center;
+}
+
+body:not(.connecte) #ecran-connexion {
+  display: block;
+}
+
+#mot-de-passe {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
 /* ===== BARRE D'ONGLETS ===== */
 nav {
   order: -1; /* place la barre au-dessus du titre */
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
   gap: 40px;
   background: var(--couleur-bleu-clair);
@@ -72,6 +97,13 @@ nav .btn-onglet {
 nav .btn-onglet.actif {
   color: var(--couleur-bleu);
   border-bottom-color: var(--couleur-accent);
+}
+
+#btn-deconnexion {
+  margin: 0;
+  background: none;
+  color: var(--couleur-bleu);
+  border: 1px solid var(--couleur-bleu);
 }
 
 /* ===== MESSAGES (erreurs et confirmations) ===== */
@@ -180,6 +212,13 @@ nav .btn-onglet.actif {
   background: var(--couleur-accent);
 }
 
+.auteur {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--couleur-texte-doux);
+}
+
 .recette ul,
 .recette ol {
   margin: 0 0 10px;
@@ -195,7 +234,8 @@ nav .btn-onglet.actif {
   padding: 0 20px;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="password"] {
   padding: 10px;
   background: var(--couleur-carte);
   border: 1px solid var(--couleur-bordure);
@@ -204,12 +244,14 @@ input[type="text"] {
   font-size: 1rem;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="password"]:focus {
   outline: 2px solid var(--couleur-bleu-moyen);
   border-color: var(--couleur-bleu);
 }
 
-#titre {
+#titre,
+#auteur {
   width: 100%;
   margin-bottom: 14px;
 }
@@ -286,9 +328,21 @@ button:disabled {
   cursor: wait;
 }
 
+/* ===== TABLETTE ===== */
+@media (max-width: 900px) {
+  nav { gap: 30px; }
+  h1 { font-size: 2.6rem; }
+  #liste-recettes {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  #onglet-creer form { max-width: 600px; }
+}
+
 /* ===== TÉLÉPHONE ===== */
 @media (max-width: 600px) {
   nav { gap: 20px; }
   h1 { font-size: 2.2rem; }
+  #liste-recettes { grid-template-columns: 1fr; }
   #recherche { width: 100%; margin-bottom: 8px; }
 }

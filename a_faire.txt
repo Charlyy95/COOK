@@ -1,7 +1,5 @@
 -enregistrement des img
--media query tablettes
 -connexions
--gestion de erreurs (accepeter une qté vide, aucune étape)
 ajout cuisson/ustensile ?
 
 consulter le detail d'une recette sur lequel on voit les invités qui l'ont deja mangé
@@ -9,3 +7,5 @@ a qui la recette a été faite
 supprimer/modifier une recette deja existante
 filtre par temps, complexité, alphabetique, type
 tri (dessert/entrée/plat/gouter)
+
+gestion des sessions ? cas d'un appareil commun a plusieurs users
