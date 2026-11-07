@@ -13,6 +13,7 @@
 <nav>
   <button type="button" class="btn-onglet" data-onglet="onglet-recettes">Recettes</button>
   <button type="button" class="btn-onglet" data-onglet="onglet-creer">Créer</button>
+  <button type="button" class="btn-onglet" data-onglet="onglet-invites">Invités</button>
   <button type="button" id="btn-deconnexion">Déconnexion</button>
 </nav>
 
@@ -27,14 +28,81 @@
 <!-- Onglet 1 : chercher les recettes -->
 <section id="onglet-recettes" class="onglet">
   <input type="text" id="recherche-recette" placeholder="Chercher une recette, un ingrédient ou un prénom">
+
+  <div id="filtres">
+    <select id="filtre-type">
+      <option value="">Tous les types</option>
+      <option>Entrée</option>
+      <option>Plat</option>
+      <option>Dessert</option>
+      <option>Goûter</option>
+    </select>
+    <select id="filtre-temps">
+      <option value="0">Tous les temps</option>
+      <option value="15">15 min max</option>
+      <option value="30">30 min max</option>
+      <option value="60">1 h max</option>
+      <option value="120">2 h max</option>
+    </select>
+    <select id="filtre-difficulte">
+      <option value="">Toutes difficultés</option>
+      <option>Facile</option>
+      <option>Moyen</option>
+      <option>Difficile</option>
+    </select>
+    <select id="tri">
+      <option value="recent">Plus récentes</option>
+      <option value="az">A → Z</option>
+      <option value="temps">Temps croissant</option>
+      <option value="type">Par type de plat</option>
+    </select>
+  </div>
+
   <div id="liste-recettes"></div>
 </section>
 
-<!-- Onglet 2 : créer une recette -->
+<!-- Page de détail d'une recette -->
+<section id="onglet-detail" class="onglet">
+  <div id="detail">
+    <button type="button" id="btn-retour">← Retour</button>
+    <div id="detail-contenu"></div>
+
+    <h3>Ont déjà mangé ce plat</h3>
+    <p class="aide">Clique sur une photo pour ajouter ou retirer quelqu'un de la liste.</p>
+    <div id="selecteur-detail"></div>
+
+    <button type="button" id="btn-modifier">Modifier</button>
+    <button type="button" id="btn-supprimer">Supprimer</button>
+  </div>
+</section>
+
+<!-- Onglet 2 : créer (ou modifier) une recette -->
 <section id="onglet-creer" class="onglet">
+  <div id="bandeau-edition">
+    <span id="texte-edition"></span>
+    <button type="button" id="btn-annuler-edition">Annuler</button>
+  </div>
+
   <form>
     <input type="text" id="titre" placeholder="Titre de la recette"><br>
     <input type="text" id="auteur" placeholder="Ton prénom (qui ajoute la recette ?)"><br>
+
+    <select id="type">
+      <option value="">Type de plat</option>
+      <option>Entrée</option>
+      <option>Plat</option>
+      <option>Dessert</option>
+      <option>Goûter</option>
+    </select>
+    <select id="difficulte">
+      <option value="">Difficulté (facultatif)</option>
+      <option>Facile</option>
+      <option>Moyen</option>
+      <option>Difficile</option>
+    </select>
+    <input type="number" id="temps" placeholder="Temps total en minutes (facultatif)" min="1">
+    <input type="text" id="cuisson" placeholder="Cuisson, ex : 25 min à 180 °C (facultatif)"><br>
+
     <label>Photo de la recette : <input type="file" id="photo-recette" accept="image/*"></label><br><br>
 
     <div id="liste-etapes"></div>
@@ -45,8 +113,25 @@
     <label>Photo de l'ingrédient : <input type="file" id="photo-ingredient" accept="image/*"></label>
     <div id="choix-ingredients"></div>
 
+    <div id="bloc-invites-creation">
+      <p class="titre-bloc">Qui a déjà mangé ce plat ? (facultatif)</p>
+      <div id="selecteur-creation"></div>
+    </div>
+
     <button type="button" id="btn-recette">Enregistrer la recette</button>
   </form>
+</section>
+
+<!-- Onglet 3 : gérer les invités -->
+<section id="onglet-invites" class="onglet">
+  <div id="formulaire-invite">
+    <input type="text" id="nom-invite" placeholder="Prénom de l'invité"><br>
+    <label>Photo de profil : <input type="file" id="photo-invite" accept="image/*"></label><br>
+    <button type="button" id="btn-invite">Ajouter l'invité</button>
+    <button type="button" id="btn-annuler-invite" hidden>Annuler</button>
+  </div>
+
+  <div id="liste-invites"></div>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

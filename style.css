@@ -1,25 +1,25 @@
 /* ===== COULEURS ET RÉGLAGES : tout se change ici ===== */
 :root {
-  --couleur-fond: #F2E8CF;         /* beige très très clair : fond de la page */
-  --couleur-carte: #ffffff;        /* fond des zones de saisie */
-  --couleur-bleu-clair: #0277ca;   /* barre d'onglets */
-  --couleur-bleu-moyen: #096db9;   /* bandeau de recherche */
-  --couleur-bleu: #02467e;         /* boutons, titre, onglet actif */
-  --couleur-accent: #d9946f;       /* touche chaude : petits traits */
-  --couleur-texte: #1f2f3d;
-  --couleur-texte-doux: #55646f;
-  --couleur-placeholder: #e8f0f5;  /* fond des cartes sans photo */
-  --couleur-bordure: #e3dac9;
+--couleur-fond: #F2E8CF;         /* beige très très clair : fond de la page */
+--couleur-carte: #ffffff;        /* fond des zones de saisie */
+--couleur-bleu-clair: #0277ca;   /* barre d'onglets */
+--couleur-bleu-moyen: #096db9;   /* bandeau de recherche */
+--couleur-bleu: #02467e;         /* boutons, titre, onglet actif */
+--couleur-accent: #d9946f;       /* touche chaude : petits traits */
+--couleur-texte: #1f2f3d;
+--couleur-texte-doux: #55646f;
+--couleur-placeholder: #e8f0f5;  /* fond des cartes sans photo */
+--couleur-bordure: #e3dac9;
 
-  --couleur-erreur-fond: #fbe3e0;
-  --couleur-erreur-texte: #8a2a1f;
-  --couleur-succes-fond: #e0f0e4;
-  --couleur-succes-texte: #24633a;
+--couleur-erreur-fond: #fbe3e0;
+--couleur-erreur-texte: #8a2a1f;
+--couleur-succes-fond: #e0f0e4;
+--couleur-succes-texte: #24633a;
 
-  --rayon: 6px;
-  --largeur-max: 1200px;
-  --hauteur-bandeau: 90px;
-  --hauteur-champ: 46px;
+--rayon: 6px;
+--largeur-max: 1200px;
+--hauteur-bandeau: 90px;
+--hauteur-champ: 46px;
 }
 
 /* ===== BASE ===== */
@@ -42,7 +42,6 @@ h1 {
   color: var(--couleur-bleu);
   font-size: 3rem;
   font-weight: 800;
-  letter-spacing: 2px;
   margin: 30px 0;
 }
 
@@ -82,28 +81,28 @@ nav {
 
 nav .btn-onglet {
   background: none;
-  color: var(--couleur-texte);
+  color: #ffffff;
+  opacity: 0.75;
   border: none;
   border-bottom: 3px solid transparent;
   border-radius: 0;
   margin: 0;
   padding: 26px 8px 20px;
-  font-size: 1rem;
-  font-weight: 800;
-  text-transform: uppercase;
+  font-size: 1.1rem;
+  font-weight: 700;
   cursor: pointer;
 }
 
 nav .btn-onglet.actif {
-  color: var(--couleur-bleu);
+  opacity: 1;
   border-bottom-color: var(--couleur-accent);
 }
 
 #btn-deconnexion {
   margin: 0;
   background: none;
-  color: var(--couleur-bleu);
-  border: 1px solid var(--couleur-bleu);
+  color: #ffffff;
+  border: 1px solid #ffffff;
 }
 
 /* ===== MESSAGES (erreurs et confirmations) ===== */
@@ -162,14 +161,30 @@ nav .btn-onglet.actif {
   font-style: italic;
 }
 
+/* filtres et tri, sous le bandeau */
+#filtres {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: min(900px, 90%);
+  margin: 20px auto 0;
+}
+
 /* grille de cartes */
 #liste-recettes {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 30px;
   max-width: var(--largeur-max);
-  margin: 40px auto;
+  margin: 30px auto 40px;
   padding: 0 20px;
+}
+
+.vide {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--couleur-texte-doux);
 }
 
 /* bloc coloré à la place de la photo, quand il n'y en a pas */
@@ -212,10 +227,23 @@ nav .btn-onglet.actif {
   background: var(--couleur-accent);
 }
 
+.infos {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--couleur-bleu);
+}
+
 .auteur {
   margin: 0 0 10px;
   font-size: 0.85rem;
   font-style: italic;
+  color: var(--couleur-texte-doux);
+}
+
+.detail {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
   color: var(--couleur-texte-doux);
 }
 
@@ -235,7 +263,9 @@ nav .btn-onglet.actif {
 }
 
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="number"],
+select {
   padding: 10px;
   background: var(--couleur-carte);
   border: 1px solid var(--couleur-bordure);
@@ -245,13 +275,19 @@ input[type="password"] {
 }
 
 input[type="text"]:focus,
-input[type="password"]:focus {
+input[type="password"]:focus,
+input[type="number"]:focus,
+select:focus {
   outline: 2px solid var(--couleur-bleu-moyen);
   border-color: var(--couleur-bleu);
 }
 
 #titre,
-#auteur {
+#auteur,
+#type,
+#difficulte,
+#temps,
+#cuisson {
   width: 100%;
   margin-bottom: 14px;
 }
@@ -328,6 +364,186 @@ button:disabled {
   cursor: wait;
 }
 
+/* ===== CARTES CLIQUABLES ===== */
+.recette {
+  cursor: pointer;
+}
+
+.recette:hover h4 {
+  color: var(--couleur-bleu);
+}
+
+/* ===== PAGE DE DÉTAIL ===== */
+#detail {
+  max-width: 800px;
+  margin: 30px auto 50px;
+  padding: 0 20px;
+}
+
+#btn-retour {
+  margin: 0 0 16px;
+  padding-left: 0;
+  background: none;
+  color: var(--couleur-bleu);
+}
+
+.photo-detail {
+  display: block;
+  width: 100%;
+  max-height: 380px;
+  object-fit: cover;
+  border-radius: var(--rayon);
+}
+
+#detail h2 {
+  margin: 20px 0 6px;
+  font-size: 2rem;
+  color: var(--couleur-bleu);
+}
+
+#detail h3 {
+  margin: 24px 0 8px;
+  font-size: 1.2rem;
+}
+
+#detail-contenu ul,
+#detail-contenu ol {
+  padding-left: 22px;
+  line-height: 1.6;
+}
+
+#btn-supprimer {
+  margin-left: 8px;
+  background: var(--couleur-erreur-texte);
+}
+
+/* ===== BANDEAU DE MODIFICATION ===== */
+#bandeau-edition {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  max-width: 700px;
+  margin: 20px auto 0;
+  padding: 10px 16px;
+  background: var(--couleur-bleu-clair);
+  color: #ffffff;
+  border-radius: var(--rayon);
+  font-weight: bold;
+}
+
+#bandeau-edition button {
+  margin: 0;
+  background: none;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+/* ===== PHOTOS DE PROFIL ===== */
+.photo-profil {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--couleur-placeholder);
+  color: var(--couleur-bleu);
+  font-size: 1.6rem;
+  font-weight: 700;
+  border: 3px solid transparent;
+}
+
+/* sélecteur d'invités : grisés par défaut, en couleur une fois choisis */
+#selecteur-creation,
+#selecteur-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 8px 0 20px;
+}
+
+.avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 84px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.avatar.choisi {
+  opacity: 1;
+  filter: none;
+}
+
+.avatar.choisi .photo-profil {
+  border-color: var(--couleur-bleu);
+}
+
+.titre-bloc {
+  margin: 20px 0 8px;
+  font-weight: bold;
+}
+
+.aide,
+.vide-invites {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  color: var(--couleur-texte-doux);
+}
+
+/* ===== ONGLET INVITÉS ===== */
+#formulaire-invite {
+  max-width: 700px;
+  margin: 30px auto 10px;
+  padding: 0 20px;
+}
+
+#nom-invite {
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+#liste-invites {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 20px;
+  max-width: var(--largeur-max);
+  margin: 20px auto 40px;
+  padding: 0 20px;
+}
+
+.carte-invite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  text-align: center;
+  background: var(--couleur-carte);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon);
+}
+
+.carte-invite .photo-profil {
+  width: 80px;
+  height: 80px;
+}
+
+.carte-invite button {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
+.btn-supprimer-invite {
+  background: var(--couleur-erreur-texte);
+}
+
 /* ===== TABLETTE ===== */
 @media (max-width: 900px) {
   nav { gap: 30px; }
@@ -345,4 +561,5 @@ button:disabled {
   h1 { font-size: 2.2rem; }
   #liste-recettes { grid-template-columns: 1fr; }
   #recherche { width: 100%; margin-bottom: 8px; }
+  #filtres select { flex: 1 1 45%; }
 }
