@@ -56,17 +56,22 @@ async function demarrer() {
 
 document.getElementById('btn-connexion').addEventListener('click', async function () {
   const champ = document.getElementById('mot-de-passe')
-  if (champ.value === '') {
+  const mdp = champ.value.trim() // enlève les espaces ajoutés par le clavier
+  if (mdp === '') {
     afficherMessage('Tape le mot de passe de la famille.', 'erreur')
     return
   }
   const { error } = await db.auth.signInWithPassword({
     email: EMAIL_FAMILLE,
-    password: champ.value
+    password: mdp
   })
   if (error) {
     console.log(error)
-    afficherMessage('Mot de passe incorrect.', 'erreur')
+    if (error.code === 'invalid_credentials' || error.message === 'Invalid login credentials') {
+      afficherMessage('Mot de passe incorrect.', 'erreur')
+    } else {
+      afficherMessage('Connexion impossible : ' + error.message, 'erreur')
+    }
     return
   }
   champ.value = ''
