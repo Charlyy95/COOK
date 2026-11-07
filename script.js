@@ -4,7 +4,7 @@ const db = window.supabase.createClient(
 )
 
 // l'email du compte partagé que tu as créé dans Supabase
-const EMAIL_FAMILLE = 'famille@cook.fr'
+const EMAIL_FAMILLE = 'meriot.cook@gmail.com'
 
 // ----- État de la page -----
 const ORDRE_TYPES = ['Entrée', 'Plat', 'Dessert', 'Goûter']
